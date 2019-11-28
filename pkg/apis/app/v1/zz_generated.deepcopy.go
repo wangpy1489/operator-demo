@@ -91,6 +91,8 @@ func (in *AppServiceSpec) DeepCopyInto(out *AppServiceSpec) {
 		*out = make([]corev1.ServicePort, len(*in))
 		copy(*out, *in)
 	}
+	in.Storage.DeepCopyInto(&out.Storage)
+	in.PVClaim.DeepCopyInto(&out.PVClaim)
 	return
 }
 

@@ -20,6 +20,8 @@ type AppServiceSpec struct {
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 	Envs      []corev1.EnvVar             `json:"envs,omitempty"`
 	Ports     []corev1.ServicePort        `json:"ports,omitempty"`
+	Storage	  corev1.PersistentVolumeSpec `json:"storage,omitempty"`
+	PVClaim   corev1.PersistentVolumeClaimSpec	`json:"PVClaim,omitempty"`
 }
 
 // AppServiceStatus defines the observed state of AppService
