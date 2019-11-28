@@ -126,6 +126,14 @@ func (r *ReconcileAppService) Reconcile(request reconcile.Request) (reconcile.Re
 		if err := r.client.Create(context.TODO(), service); err != nil {
 			return reconcile.Result{}, err
 		}
+		pv := resources.NewPV(instance)
+		if err := r.client.Create(context.TODO(), pv); err != nil {
+			return reconcile.Result{}, err
+		}
+		pvc := resources.NewPVC(instance)
+		if err := r.client.Create(context.TODO(),pvc); err !=nil {
+			return reconcile.Result{}, err
+		}
 		// 3. 关联 Annotations
 		data, _ := json.Marshal(instance.Spec)
 		if instance.Annotations != nil {
@@ -164,6 +172,26 @@ func (r *ReconcileAppService) Reconcile(request reconcile.Request) (reconcile.Re
 		}
 		oldService.Spec = newService.Spec
 		if err := r.client.Update(context.TODO(), oldService); err != nil {
+			return reconcile.Result{}, err
+		}
+
+		newPv := resources.NewPV(instance)
+		oldPv := &corev1.PersistentVolume{}
+		if err := r.client.Get(context.TODO(),request.NamespacedName, oldPv); err != nil {
+			return reconcile.Result{}, err
+		}
+		oldPv.Spec = newPv.Spec
+		if err:=  r.client.Update(context.TODO(), oldPv); err!= nil {
+			return reconcile.Result{}, err
+		}
+
+		newPvc := resources.NewPVC(instance)
+		oldPvc := &corev1.PersistentVolumeClaim{}
+		if err := r.client.Get(context.TODO(),request.NamespacedName,oldPvc); err !=nil {
+			return reconcile.Result{}, err
+		}
+		oldPvc.Spec = newPvc.Spec
+		if err:=  r.client.Update(context.TODO(), oldPvc); err!= nil {
 			return reconcile.Result{}, err
 		}
 

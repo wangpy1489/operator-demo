@@ -9,3 +9,25 @@ spec:
     - port: 80
       targetPort: 80
       nodePort: 30002
+  storage:
+    capacity:
+      storage: 5Gi
+    volumeMode: Filesystem
+    accessModes:
+      - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Recycle
+    storageClassName: slow
+    mountOptions:
+      - hard
+      - nfsvers=4.1
+    nfs:
+      path: /data/nfs
+      server: 10.0.0.17
+  PVClaim:
+    accessModes:
+      - ReadWriteOnce
+    volumeMode: Filesystem
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: slow
